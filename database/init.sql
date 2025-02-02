@@ -6,3 +6,16 @@ CREATE TABLE IF NOT EXISTS students (
     age INT,
     grade VARCHAR(50)
 );
+
+-- Insert Sample Data
+INSERT INTO students (name, age, grade) VALUES 
+    ('Alice Johnson', 14, '8th Grade'),
+    ('Bob Smith', 13, '7th Grade'),
+    ('Charlie Brown', 15, '9th Grade'),
+    ('David White', 12, '6th Grade'),
+    ('Emma Wilson', 14, '8th Grade'),
+    ('Frank Green', 16, '10th Grade'),
+    ('Grace Lee', 13, '7th Grade'),
+    ('Henry Miller', 15, '9th Grade'),
+    ('Ivy Carter', 12, '6th Grade'),
+    ('Jack Turner', 14, '8th Grade');
