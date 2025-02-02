@@ -1,0 +1,114 @@
+{
+    "info": {
+        "name": "Student Microservice",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get Auth Token",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                    }
+                ],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "username",
+                            "value": "your_username",
+                            "type": "text"
+                        },
+                        {
+                            "key": "password",
+                            "value": "your_password",
+                            "type": "text"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "http://localhost:8000/token",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "token"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Get Students",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{authToken}}"
+                    }
+                ],
+                "url": {
+                    "raw": "http://localhost:8000/students/",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "students"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Create Student",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{authToken}}"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"id\": \"1\",\n    \"name\": \"John Doe\",\n    \"age\": 14,\n    \"class\": \"8th Grade\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8000/students/",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "students"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "event": [
+        {
+            "listen": "test",
+            "script": {
+                "exec": [
+                    "pm.environment.set(\"authToken\", pm.response.json().access_token);"
+                ],
+                "type": "text/javascript"
+            }
+        }
+    ]
+}
