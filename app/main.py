@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import students, auth
-from app.database import init_db
+from app.routers import students, auth, profiles
+from app.database import init_db, mongo_client
 
 app = FastAPI()
 
@@ -14,12 +14,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize database
+# Initialize MySQL database tables
 init_db()
+
+@app.on_event("startup")
+async def startup_db_client():
+    """Ensure MongoDB connection is active on startup"""
+    try:
+        mongo_client.admin.command("ping")
+        print("✅ MongoDB Connected Successfully!")
+    except Exception as e:
+        print(f"❌ MongoDB Connection Error: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_db_client():
+    """Close MongoDB connection on shutdown"""
+    mongo_client.close()
 
 # Include Routers
 app.include_router(auth.router)
 app.include_router(students.router)
+app.include_router(profiles.router)  # Added profiles router for MongoDB profiles
 
 @app.get("/")
 def root():

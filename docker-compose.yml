@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   mysql:
     image: mysql:5.7
@@ -15,11 +16,20 @@ services:
     ports:
       - "6379:6379"
 
+  mongodb:
+    image: mongo:latest
+    container_name: student_profiles_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+
   app:
     build: .
     depends_on:
       - mysql
       - redis
+      - mongodb
     ports:
       - "8000:8000"
     develop:
