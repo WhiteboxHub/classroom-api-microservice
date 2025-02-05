@@ -9,7 +9,7 @@ services:
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
   redis:
     image: redis:alpine
@@ -20,7 +20,9 @@ services:
     image: mongo:latest
     container_name: student_profiles_db
     ports:
-      - "27017:27017"
+      - "27020:27017"
+    environment:
+      
     volumes:
       - ./database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
 
