@@ -1,7 +1,9 @@
 fastapi
 uvicorn
 sqlalchemy
+psycopg2
 pydantic
 motor
 redis
 pyjwt
+pymysql

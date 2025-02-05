@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import students, auth, profiles
+from app.routers import students, profiles
 from app.database import init_db, mongo_client
 
 app = FastAPI()
@@ -32,7 +32,7 @@ async def shutdown_db_client():
     mongo_client.close()
 
 # Include Routers
-app.include_router(auth.router)
+# app.include_router(auth.router)
 app.include_router(students.router)
 app.include_router(profiles.router)  # Added profiles router for MongoDB profiles
 

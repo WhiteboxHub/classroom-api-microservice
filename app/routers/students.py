@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.auth import verify_token
+# from app.auth import verify_token
 from app.controllers import get_all_students, create_student
 
 router = APIRouter(prefix="/students", tags=["students"])
 
 @router.get("/")
-def get_students(payload: dict = Depends(verify_token)):
+def get_students(): # removed this payload: dict = Depends(verify_token)
     """Fetch students using the controller (cache-first approach)."""
     students = get_all_students()
     if not students:
@@ -15,7 +15,7 @@ def get_students(payload: dict = Depends(verify_token)):
     return students
 
 @router.post("/")
-def add_student(student: dict, payload: dict = Depends(verify_token)):
+def add_student(student: dict ): # removed this payload: dict = Depends(verify_token)
     """Create a student and store in Redis."""
     student_id = student.get("id")
     if not student_id:
