@@ -3,6 +3,8 @@ from app.redis_client import db_redis
 from app.database import get_db, get_mongo_collection
 from app.models import Student, StudentProfile
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
+from fastapi.encoders import jsonable_encoder
 
 # MongoDB Collection
 mongo_collection = get_mongo_collection("students")
@@ -59,7 +61,10 @@ async def create_student_profile(profile: StudentProfile):
     existing_profile = await mongo_collection.find_one({"student_id": profile.student_id})
     if existing_profile:
         raise HTTPException(status_code=400, detail="Profile already exists")
+
+    new_profile = jsonable_encoder(profile.dict())  # ✅ Handles serialization
+    result = await mongo_collection.insert_one(new_profile)
     
-    new_profile = profile.dict()
-    await mongo_collection.insert_one(new_profile)
+    new_profile["_id"] = str(result.inserted_id)  # ✅ Ensure `_id` is a string
+
     return new_profile

@@ -15,9 +15,9 @@ class Student(Base):
 
 # Pydantic Model for MongoDB (Social Profiles)
 class SocialLinks(BaseModel):
-    facebook: Optional[HttpUrl] = None
-    linkedin: Optional[HttpUrl] = None
-    twitter: Optional[HttpUrl] = None
+    facebook: Optional[str] = None  # ✅ Store as plain string
+    linkedin: Optional[str] = None
+    twitter: Optional[str] = None
 
 class StudentProfile(BaseModel):
     student_id: int
