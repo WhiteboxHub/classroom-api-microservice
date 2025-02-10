@@ -7,3 +7,5 @@ motor
 redis
 pyjwt
 pymysql
+mysql-connector-python
+mysql-connector

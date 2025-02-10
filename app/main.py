@@ -14,8 +14,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize MySQL database tables
 init_db()
+# Initialize MySQL database tables
 
 @app.on_event("startup")
 async def startup_db_client():
@@ -23,6 +23,7 @@ async def startup_db_client():
     try:
         mongo_client.admin.command("ping")
         print("✅ MongoDB Connected Successfully!")
+        
     except Exception as e:
         print(f"❌ MongoDB Connection Error: {e}")
 
@@ -39,3 +40,4 @@ app.include_router(profiles.router)  # Added profiles router for MongoDB profile
 @app.get("/")
 def root():
     return {"message": "Student Microservice Running"}
+

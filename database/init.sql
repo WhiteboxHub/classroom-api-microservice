@@ -19,3 +19,4 @@ INSERT INTO students (name, age, grade) VALUES
     ('Henry Miller', 15, '9th Grade'),
     ('Ivy Carter', 12, '6th Grade'),
     ('Jack Turner', 14, '8th Grade');
+

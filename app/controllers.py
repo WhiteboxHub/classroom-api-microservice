@@ -11,7 +11,7 @@ mongo_collection = get_mongo_collection("students")
 
 
 # 🟢 Fetch all students (Redis + MySQL)
-def get_all_students():
+def get_all_students(db: Session):
     """Fetch students from cache first, fallback to database if not found."""
     students = []
     keys = db_redis.keys("student:*")
@@ -25,9 +25,9 @@ def get_all_students():
         return students
     
     # If cache is empty, fetch from MySQL database
-    with get_db() as db:
-        students_from_db = db.query(Student).all()
-        for student in students_from_db:
+   
+    students_from_db = db.query(Student).all()
+    for student in students_from_db:
             student_dict = {
                 "id": student.id,
                 "name": student.name,

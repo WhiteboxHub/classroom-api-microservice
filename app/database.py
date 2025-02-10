@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from motor.motor_asyncio import AsyncIOMotorClient
 
 # MySQL Database Connection
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:root@localhost:3307/student_db"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:root@mysql:3306/student_db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -24,10 +24,11 @@ def get_db():
         db.close()
 
 # MongoDB Database Connection
-MONGODB_URL = "mongodb://localhost:27020"
+MONGODB_URL = "mongodb://mongodb:27017"
 mongo_client = AsyncIOMotorClient(MONGODB_URL)
 mongo_db = mongo_client["social_profiles"]  # MongoDB database
 
 def get_mongo_collection(collection_name: str):
     """Returns a MongoDB collection"""
     return mongo_db[collection_name]
+

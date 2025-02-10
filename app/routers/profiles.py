@@ -18,3 +18,4 @@ async def add_profile(profile: StudentProfile): # removed this  payload: dict = 
     """Create a student's social profile in MongoDB"""
     new_profile = await create_student_profile(profile)
     return {"message": "Profile created successfully", "profile": new_profile}
+

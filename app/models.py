@@ -13,6 +13,12 @@ class Student(Base):
     grade = Column(String)
 
 
+class StudentCreate(BaseModel):
+    id: str
+    name: str
+    age: int
+    grade: str
+
 # Pydantic Model for MongoDB (Social Profiles)
 class SocialLinks(BaseModel):
     facebook: Optional[str] = None  # ✅ Store as plain string
