@@ -33,7 +33,7 @@ async def shutdown_db_client():
     mongo_client.close()
 
 # Include Routers
-# app.include_router(auth.router)
+
 app.include_router(students.router)
 app.include_router(profiles.router)  # Added profiles router for MongoDB profiles
 

@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import StudentCreate
-# from app.auth import verify_token
 from app.controllers import get_all_students, create_student
 
 router = APIRouter(prefix="/students", tags=["students"])

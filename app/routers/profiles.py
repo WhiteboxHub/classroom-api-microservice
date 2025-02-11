@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException
-# from app.auth import verify_token
 from app.controllers import get_student_profile, create_student_profile
 from app.models import StudentProfile
 

@@ -15,6 +15,7 @@ def get_all_students(db: Session):
     """Fetch students from cache first, fallback to database if not found."""
     students = []
     keys = db_redis.keys("student:*")
+    
 
     for key in keys:
         student_data = db_redis.get(key)
