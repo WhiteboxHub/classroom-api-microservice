@@ -7,12 +7,13 @@ from app.controllers import get_all_students, create_student
 router = APIRouter(prefix="/students", tags=["students"])
 
 @router.get("/")
-def get_students(db: Session = Depends(get_db)): # removed this payload: dict = Depends(verify_token)
+def get_students(name: str = None, age: int = None ,db: Session = Depends(get_db)): # removed this payload: dict = Depends(verify_token)
     """Fetch students using the controller (cache-first approach)."""
-    students = get_all_students(db)
+    students = get_all_students(db,name=name,age=age)
     if not students:
         raise HTTPException(status_code=404, detail="No students found")
     return students
+
 
   # Import the correct Pydantic model
 
@@ -25,6 +26,6 @@ def add_student(student: StudentCreate):  # ✅ Use Pydantic model
     if not student_id:
         raise HTTPException(status_code=400, detail="Student ID is required")
     
-    new_student = create_student(student_id, student.dict())  # ✅ Convert Pydantic model to dict
+    new_student = create_student(student_id, student.model_dump()) # ✅ Convert Pydantic model to dict
     return {"message": "Student created successfully", "student": new_student}
 

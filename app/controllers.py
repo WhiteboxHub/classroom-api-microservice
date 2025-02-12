@@ -11,32 +11,56 @@ mongo_collection = get_mongo_collection("students")
 
 
 # 🟢 Fetch all students (Redis + MySQL)
-def get_all_students(db: Session):
-    """Fetch students from cache first, fallback to database if not found."""
+def get_all_students(db: Session, name: str = None, age: int = None):
+    """Fetch students from cache first, fallback to database if not found, with optional filtering."""
     students = []
-    keys = db_redis.keys("student:*")
     
+    # Fetching keys from the cache for 'student:*'
+    keys = db_redis.keys("student:*")
 
+    # If cache has data, filter based on name and age
     for key in keys:
         student_data = db_redis.get(key)
         if student_data:
-            students.append(json.loads(student_data))
-
+            student_dict = json.loads(student_data)
+            
+            # Apply name and age filtering if provided
+            if name and age:
+                if (name.lower() in student_dict['name'].lower()) and (student_dict['age'] == age):
+                    students.append(student_dict)
+            elif name:
+                if name.lower() in student_dict['name'].lower():
+                    students.append(student_dict)
+            elif age:
+                if student_dict['age'] == age:
+                    students.append(student_dict)
+            else:
+                students.append(student_dict)
+    
+    # If we have results from cache, return them
     if students:
         return students
     
-    # If cache is empty, fetch from MySQL database
-   
-    students_from_db = db.query(Student).all()
+    # If cache is empty or no match, fetch from MySQL database
+    query = db.query(Student)
+    
+    if name:
+        query = query.filter(Student.name.ilike(f"%{name}%"))  # Partial match for name
+    if age:
+        query = query.filter(Student.age == age)  # Exact match for age
+    
+    students_from_db = query.all()
+
+    # Store fetched students in the cache and return them
     for student in students_from_db:
-            student_dict = {
-                "id": student.id,
-                "name": student.name,
-                "age": student.age,
-                "class": student.grade  # Fixed class -> grade
-            }
-            db_redis.set(f"student:{student.id}", json.dumps(student_dict))
-            students.append(student_dict)
+        student_dict = {
+            "id": student.id,
+            "name": student.name,
+            "age": student.age,
+            "class": student.grade  # Fixed class -> grade
+        }
+        db_redis.set(f"student:{student.id}", json.dumps(student_dict))
+        students.append(student_dict)
 
     return students
 
@@ -69,3 +93,4 @@ async def create_student_profile(profile: StudentProfile):
     new_profile["_id"] = str(result.inserted_id)  # ✅ Ensure `_id` is a string
 
     return new_profile
+
