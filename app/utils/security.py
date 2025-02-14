@@ -3,7 +3,7 @@ import bcrypt
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 
-SECRET_KEY = "your_secret_key"  # Must be consistent
+SECRET_KEY = "secret_key"  
 ALGORITHM = "HS256"  # Must be consistent
 
 def hash_password(password: str) -> str:

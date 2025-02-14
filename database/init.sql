@@ -29,6 +29,3 @@ CREATE TABLE auth (
     role VARCHAR(50)
 );
 
-INSERT INTO auth (email, username, password_hash, phone_number, role)  
-VALUES ('wbl@example.com', 'admin', 'wbl', '1234567890', 'admin');
-
