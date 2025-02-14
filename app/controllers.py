@@ -10,7 +10,6 @@ from fastapi.encoders import jsonable_encoder
 mongo_collection = get_mongo_collection("students")
 
 
-# 🟢 Fetch all students (Redis + MySQL)
 def get_all_students(db: Session, name: str = None, age: int = None):
     """Fetch students from cache first, fallback to database if not found, with optional filtering."""
     students = []
@@ -25,16 +24,10 @@ def get_all_students(db: Session, name: str = None, age: int = None):
             student_dict = json.loads(student_data)
             
             # Apply name and age filtering if provided
-            if name and age:
-                if (name.lower() in student_dict['name'].lower()) and (student_dict['age'] == age):
-                    students.append(student_dict)
-            elif name:
-                if name.lower() in student_dict['name'].lower():
-                    students.append(student_dict)
-            elif age:
-                if student_dict['age'] == age:
-                    students.append(student_dict)
-            else:
+            name_match = not name or name.lower() in student_dict['name'].lower()
+            age_match = not age or student_dict['age'] == age
+
+            if name_match and age_match:
                 students.append(student_dict)
     
     # If we have results from cache, return them

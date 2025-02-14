@@ -20,3 +20,15 @@ INSERT INTO students (name, age, grade) VALUES
     ('Ivy Carter', 12, '6th Grade'),
     ('Jack Turner', 14, '8th Grade');
 
+CREATE TABLE auth (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(320) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(512) NOT NULL,
+    phone_number VARCHAR(20),
+    role VARCHAR(50)
+);
+
+INSERT INTO auth (email, username, password_hash, phone_number, role)  
+VALUES ('wbl@example.com', 'admin', 'wbl', '1234567890', 'admin');
+
