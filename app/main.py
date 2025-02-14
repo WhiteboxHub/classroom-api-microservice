@@ -1,9 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import students, auth, profiles
 from app.database import init_db, mongo_client
+from app.utils.api_gateway import APIGateway  # Import APIGateway class
 
 app = FastAPI()
+api_gateway = APIGateway()  # Create an instance of APIGateway
 
 # CORS settings
 app.add_middleware(
@@ -14,8 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize MySQL database tables
-init_db()
+init_db()  # Initialize MySQL database tables
 
 @app.on_event("startup")
 async def startup_db_client():
@@ -34,8 +35,9 @@ async def shutdown_db_client():
 # Include Routers
 app.include_router(auth.router)
 app.include_router(students.router)
-app.include_router(profiles.router)  # Added profiles router for MongoDB profiles
+app.include_router(profiles.router)
 
 @app.get("/")
-def root():
+@api_gateway.rate_limited(max_calls=10, time_frame=60)  # Apply rate limiting
+async def root(request: Request):
     return {"message": "Student Microservice Running"}

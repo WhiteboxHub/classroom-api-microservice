@@ -25,6 +25,14 @@ docker-compose up -d
 docker compose up --watch
 ```
 
+### Use localhost:8000 to connect 
+
+- You can register over here  /auth/register
+
+- Login in /auth/login 
+
+# We can use localhost:8000/docs (Swagger UI) to test the endpoints and also we can use postman too
+
 ### Run with Kubernetes and Minikube
 #### Start Minikube:
 ```sh
