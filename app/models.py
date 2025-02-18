@@ -44,17 +44,6 @@ class StudentCreate(BaseModel):
     age: int
     grade: str
 
-    @field_validator('name')
-    def name_must_be_alpha(cls, value):
-        if not value.isalpha():
-            raise ValueError("Name must contain only alphabetic characters")
-        return value
-
-    @field_validator('age')
-    def age_must_be_positive(cls, value):
-        if value <= 0:
-            raise ValueError("Age must be a positive integer")
-        return value
 
     class Config:
         orm_mode = True
@@ -71,6 +60,12 @@ class StudentProfile(BaseModel):
     name: str
     social_links: Optional[SocialLinks] = None
 
+    @field_validator("name")
+    @classmethod
+    def name_must_be_alpha(cls, value: str) -> str:
+        if not value.isalpha():
+            raise ValueError("Name must contain only alphabetic characters Not Even spaces too")
+        return value
+
     class Config:
         orm_mode = True
-
