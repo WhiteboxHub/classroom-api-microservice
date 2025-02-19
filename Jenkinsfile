@@ -34,7 +34,16 @@ pipeline{
              
               '''
             }
-
+        }
+        stages {
+        stage('Check Kubectl installation') {
+            steps {
+                script {
+                    sh 'kubectl version --client'
+                    def context = sh(script: 'kubectl config current-context', returnStdout: true).trim()
+                    echo "Current kubectl context: ${context}"
+                }
+            }
         }
     }
 }
