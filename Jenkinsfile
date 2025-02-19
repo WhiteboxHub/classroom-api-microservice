@@ -36,8 +36,5 @@ pipeline{
             }
 
         }
-        stage('Deploy to EKS'){
-
-        }
     }
 }
