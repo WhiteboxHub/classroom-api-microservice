@@ -15,6 +15,7 @@ pipeline{
                 url:"${microservices_api_repo}"
             }   
         }
+    }
         stage('Docker build'){
            steps{
             sh '''
@@ -44,6 +45,36 @@ pipeline{
                     echo "Current kubectl context: ${context}"
                 }
             }
+        }
+        stage('Deploy to EKS'){
+            steps {
+                script {
+                    def filesToApply = [
+                        "K8S_DIR/app-deployment.yaml",
+                        "K8S_DIR/app-service.yaml",
+                        "K8S_DIR/configmap.yaml",
+                        "K8S_DIR/ingress.yaml",
+                        "K8S_DIR/mongo-deployment.yaml",
+                        "K8S_DIR/mongo-service.yaml",
+                        "K8S_DIR/mysql-deployment.yaml",
+                        "K8S_DIR/mysql-service.yaml",
+                        "K8S_DIR/redis-deployment.yaml",
+                        "K8S_DIR/redis-service.yaml",
+                        "K8S_DIR/secret.yaml"
+                    ]
+                     for (def file : filesToApply) {
+                        echo "Applying ${file}"
+                        sh "kubectl apply -f ${file} --namespace=${NAMESPACE}"
+                    }
+                }
+            }
+        }
+        post {
+        success {
+            echo 'Deployment success'
+        }
+        failure {
+            echo 'Deployment failure'
         }
     }
 }
