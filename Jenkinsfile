@@ -1,6 +1,6 @@
 pipeline{
-    agenty agent
-    environment :{
+    agent agent
+    environment{
         microservices_api_repo= "${env.microservices_api_repo}"
         microservices_branch_name="${env.microservices_branch_name}"
         microservices_docker_image= "${env.microservices_docker_image}"
