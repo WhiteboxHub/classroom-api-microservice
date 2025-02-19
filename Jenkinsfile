@@ -19,7 +19,7 @@ pipeline{
            steps{
             sh '''
             echo "Building Docker image ...."
-            docker build -t ${microservices_docker_image}
+            docker build -t ${microservices_docker_image} .
             '''
            } 
        }
