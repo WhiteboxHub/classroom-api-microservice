@@ -1,5 +1,5 @@
 pipeline{
-    agent agent
+    agent any
     environment{
         microservices_api_repo= "${env.microservices_api_repo}"
         microservices_branch_name="${env.microservices_branch_name}"
