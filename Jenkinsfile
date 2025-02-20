@@ -41,8 +41,8 @@ pipeline {
                 sh '''
                 echo "Logging into Amazon ECR..."
                 aws ecr get-login-password --region ${eks_region}
-                docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}/${microservices_docker_image}:latest
-                docker push ${ecr_repo_uri}/${microservices_docker_image}:latest
+                docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}/classroom-whiteboxlearning/${microservices_docker_image}:latest
+                docker push ${ecr_repo_uri}/classroom-whiteboxlearning/${microservices_docker_image}:latest
                 '''
             }
         }
