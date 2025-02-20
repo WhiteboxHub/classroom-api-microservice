@@ -11,27 +11,22 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: "${microservices_branch_name}",
-                    url: "${microservices_api_repo}"
+                git branch: "${microservices_branch_name}", url: "${microservices_api_repo}"
             }
         }
         stage('Docker build') {
             steps {
                 sh '''
-                echo "Building Docker image ...."
-                docker build -t ${microservices_docker_image} .
+                    echo "Building Docker image ...."
+                    docker build -t ${microservices_docker_image} .
                 '''
             }
         }
-        // checkin
         stage('Check AWS Credentials') {
             steps {
                 script {
-                    // Print the AWS_ACCESS_KEY_ID (the secret key will be masked if configured)
                     echo "AWS_ACCESS_KEY_ID: ${env.AWS_ACCESS_KEY_ID}"
-                    echo "AWS_SECRETE_KEY_ID: ${env.AWS_SECRETE_KEY}"
-                    
-                    // Run a simple AWS CLI command to verify credentials
+                    echo "AWS_SECRET_ACCESS_KEY: ${env.AWS_SECRET_ACCESS_KEY}"
                     sh 'aws sts get-caller-identity'
                 }
             }
@@ -39,10 +34,17 @@ pipeline {
         stage('Push to DockerHub/ECR') {
             steps {
                 sh '''
-                echo "Logging into Amazon ECR..."
-                aws ecr get-login-password --region ${eks_region} | docker login --username AWS --password-stdin ${ecr_repo_uri}
-                docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}:${microservices_docker_image}
-                docker push ${ecr_repo_uri}:${microservices_docker_image}
+                    echo "Logging into Amazon ECR..."
+                    aws ecr get-login-password --region ${eks_region} | docker login --username AWS --password-stdin ${ecr_repo_uri}
+
+                    echo "Tagging the Docker image..."
+                    docker tag ${microservices_docker_image} ${ecr_repo_uri}:${microservices_docker_image}
+
+                    echo "Checking if the image is tagged..."
+                    docker images | grep "${ecr_repo_uri}" || { echo "Image tagging failed!"; exit 1; }
+
+                    echo "Pushing the image to Amazon ECR..."
+                    docker push ${ecr_repo_uri}:${microservices_docker_image}
                 '''
             }
         }
