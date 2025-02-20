@@ -45,6 +45,8 @@ pipeline {
                 }
             }
         }
+
+
         stage('Update Kubeconfig for EKS') {
             steps {
                 sh '''
