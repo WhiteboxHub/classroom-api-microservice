@@ -28,6 +28,7 @@ pipeline {
                 script {
                     // Print the AWS_ACCESS_KEY_ID (the secret key will be masked if configured)
                     echo "AWS_ACCESS_KEY_ID: ${env.AWS_ACCESS_KEY_ID}"
+                    echo "AWS_SECRETE_KEY_ID: ${env.AWS_SECRETE_KEY_ID}"
                     
                     // Run a simple AWS CLI command to verify credentials
                     sh 'aws sts get-caller-identity'
