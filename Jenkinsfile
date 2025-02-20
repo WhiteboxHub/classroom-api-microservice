@@ -44,15 +44,24 @@ pipeline {
                 }
             }
         }
-        stage('Check Kubectl installation') {
+        stage('Update Kubeconfig for EKS') {
             steps {
-                script {
-                    sh 'kubectl version --client'
-                    def context = sh(script: 'kubectl config current-context', returnStdout: true).trim()
-                    echo "Current kubectl context: ${context}"
-                }
+                sh '''
+                export KUBECONFIG="C:/Users/dhira/.kube/config"
+                kubectl config use-context Manisai@cwesion-v2.us-east-1.eksctl.io
+                '''
             }
         }
+
+        stage('Check Cluster Info') {
+            steps {
+                sh '''
+                export KUBECONFIG="C:/Users/dhira/.kube/config"
+                kubectl cluster-info
+                '''
+            }
+        }
+
         stage('Deploy to EKS') {
             steps {
                 script {
