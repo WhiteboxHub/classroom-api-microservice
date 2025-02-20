@@ -23,6 +23,7 @@ pipeline {
                 '''
             }
         }
+        // checkin
         stage('Check AWS Credentials') {
             steps {
                 script {
