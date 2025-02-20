@@ -10,6 +10,7 @@ pipeline {
         DOCKER_HUB_USERNAME = "${env.DOCKER_HUB_USERNAME}"
         DOCKER_HUB_TAGNAME = "${env.DOCKER_HUB_TAGNAME}"
     }
+    // chekout
     stages {
         stage('Checkout Code') {
             steps {
