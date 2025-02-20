@@ -40,9 +40,9 @@ pipeline {
             steps {
                 sh '''
                 echo "Logging into Amazon ECR..."
-                aws ecr get-login-password --region ${eks_region}
-                docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}/classroom/whiteboxlearning/${microservices_docker_image}:latest
-                docker push ${ecr_repo_uri}/classroom/whiteboxlearning/${microservices_docker_image}:latest
+                aws ecr get-login-password --region ${eks_region} | docker login --username AWS --password-stdin ${ecr_repo_uri}
+                docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}:${microservices_docker_image}
+                docker push ${ecr_repo_uri}:${microservices_docker_image}
                 '''
             }
         }
