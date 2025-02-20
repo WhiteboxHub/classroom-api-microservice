@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     echo "Logging into Amazon ECR..."
-                    sh 'aws ecr get-login-password --region ${eks_region}
+                    sh 'aws ecr get-login-password --region ${eks_region}'
                     
                     echo "Tagging the Docker image..."
                     sh 'docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}/${microservices_docker_image}:latest'
