@@ -29,21 +29,25 @@ pipeline {
                 script {
                     // Print the AWS_ACCESS_KEY_ID (the secret key will be masked if configured)
                     echo "AWS_ACCESS_KEY_ID: ${env.AWS_ACCESS_KEY_ID}"
-                    echo "AWS_SECRETE_KEY_ID: ${env.AWS_SECRETE_KEY_ID}"
+                    echo "AWS_SECRETE_KEY_ID: ${env.AWS_SECRETE_KEY}"
                     
                     // Run a simple AWS CLI command to verify credentials
                     sh 'aws sts get-caller-identity'
                 }
             }
         }
-        stage('Push to DockerHub/ECR') {
+                stage('Push to ECR') {
             steps {
-                sh '''
-                echo "Logging into Amazon ECR..."
-                aws ecr get-login-password --region ${eks_region} | docker login --username AWS --password-stdin ${ecr_repo_uri}
-                docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}:${microservices_docker_image}
-                docker push ${ecr_repo_uri}:${microservices_docker_image}
-                '''
+                script {
+                    echo "Logging into Amazon ECR..."
+                    sh 'aws ecr get-login-password --region us-east-1
+                    
+                    echo "Tagging the Docker image..."
+                    sh 'docker tag microservice-api:latest 920373024363.dkr.ecr.us-east-1.amazonaws.com/microservice-api:latest'
+                    
+                    echo "Pushing the Docker image to ECR..."
+                    sh 'docker push 920373024363.dkr.ecr.us-east-1.amazonaws.com/microservice-api:latest'
+                }
             }
         }
         stage('Check Kubectl installation') {
