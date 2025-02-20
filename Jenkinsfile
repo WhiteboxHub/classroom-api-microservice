@@ -7,6 +7,8 @@ pipeline {
         KUBECONFIG = "${env.KUBECONFIG}"
         eks_region = "${env.eks_region}"
         ecr_repo_uri = "${env.ecr_repo_uri}"
+        DOCKER_HUB_USERNAME = "${env.DOCKER_HUB_USERNAME}"
+        DOCKER_HUB_TAGNAME = "${env.DOCKER_HUB_TAGNAME}"
     }
     stages {
         stage('Checkout Code') {
@@ -19,6 +21,7 @@ pipeline {
                 sh '''
                     echo "Building Docker image ...."
                     docker build -t ${microservices_docker_image} .
+                    docker tag ${microservices_docker_image} ${DOCKER_HUB_USERNAME}/${DOCKER_HUB_TAGNAME}:${microservices_docker_image}
                 '''
             }
         }
@@ -33,19 +36,12 @@ pipeline {
         }
         stage('Push to DockerHub/ECR') {
             steps {
-                sh '''
-                    echo "Logging into Amazon ECR..."
-                    aws ecr get-login-password --region ${eks_region} | docker login --username AWS --password-stdin ${ecr_repo_uri}
-
-                    echo "Tagging the Docker image..."
-                    docker tag ${microservices_docker_image} ${ecr_repo_uri}:${microservices_docker_image}
-
-                    echo "Checking if the image is tagged..."
-                    docker images | grep "${ecr_repo_uri}" || { echo "Image tagging failed!"; exit 1; }
-
-                    echo "Pushing the image to Amazon ECR..."
-                    docker push ${ecr_repo_uri}:${microservices_docker_image}
-                '''
+                withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD', variable: 'DOCKER_HUB_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_HUB_PASS" | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin
+                        docker push ${DOCKER_HUB_USERNAME}/${DOCKER_HUB_TAGNAME}:${microservices_docker_image}
+                    '''
+                }
             }
         }
         stage('Check Kubectl installation') {
@@ -75,7 +71,7 @@ pipeline {
                     ]
                     for (def file : filesToApply) {
                         echo "Applying ${file}"
-                        sh "kubectl apply -f ${file} --namespace=${NAMESPACE}"
+                        sh "kubectl apply -f ${file} --namespace=${env.NAMESPACE}"
                     }
                 }
             }
