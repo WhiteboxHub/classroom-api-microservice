@@ -36,19 +36,14 @@ pipeline {
                 }
             }
         }
-                stage('Push to ECR') {
+        stage('Push to DockerHub/ECR') {
             steps {
-                script {
-                    echo "Logging into Amazon ECR..."
-                    sh 'aws ecr get-login-password --region ${eks_region}'
-                    
-                    echo "Tagging the Docker image..."
-                    sh 'docker tag ${microservices_docker_image}:latest classroom/whiteboxlearning:${microservices_docker_image}'
-                    
-                    echo "Pushing the Docker image to ECR..."
-                    sh 'docker push ${ecr_repo_uri}/${microservices_docker_image}:latest'
-                    
-                }
+                sh '''
+                echo "Logging into Amazon ECR..."
+                aws ecr get-login-password --region ${eks_region}
+                docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}:${microservices_docker_image}
+                docker push ${ecr_repo_uri}:${microservices_docker_image}
+                '''
             }
         }
         stage('Check Kubectl installation') {
