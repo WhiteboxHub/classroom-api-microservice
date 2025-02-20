@@ -43,7 +43,7 @@ pipeline {
                     sh 'aws ecr get-login-password --region ${eks_region}'
                     
                     echo "Tagging the Docker image..."
-                    sh 'docker tag ${microservices_docker_image}:latest ${ecr_repo_uri}/${microservices_docker_image}:latest'
+                    sh 'docker tag ${microservices_docker_image}:latest classroom/whiteboxlearning/${microservices_docker_image}:latest'
                     
                     echo "Pushing the Docker image to ECR..."
                     sh 'docker push ${ecr_repo_uri}/${microservices_docker_image}:latest'
