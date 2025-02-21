@@ -53,19 +53,10 @@ pipeline {
                 }
             }
         }
-        stage('Update Kubeconfig for EKS') {
-            steps {
-                sh '''
-                export KUBECONFIG="C:/Users/dhira/.kube/eks-cleaned-config"
-                kubectl config use-context Manisai@cwesion-v2.us-east-1.eksctl.io
-                '''
-            }
-        }
 
         stage('Check Cluster Info') {
             steps {
                 sh '''
-                export KUBECONFIG="C:/Users/dhira/.kube/eks-config"
                 kubectl cluster-info
                 '''
             }
