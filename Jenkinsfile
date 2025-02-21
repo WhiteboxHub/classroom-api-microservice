@@ -45,12 +45,18 @@ pipeline {
                 }
             }
         }
-
-
+         stage('Check Kubernetes Context') {
+            steps {
+                withCredentials([file(credentialsId: 'EKS_CONFIG11', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl config get-contexts'
+                    sh 'kubectl config current-context'
+                }
+            }
+        }
         stage('Update Kubeconfig for EKS') {
             steps {
                 sh '''
-                export KUBECONFIG="C:/Users/dhira/.kube/config"
+                export KUBECONFIG="C:/Users/dhira/.kube/eks-cleaned-config"
                 kubectl config use-context Manisai@cwesion-v2.us-east-1.eksctl.io
                 '''
             }
@@ -59,7 +65,7 @@ pipeline {
         stage('Check Cluster Info') {
             steps {
                 sh '''
-                export KUBECONFIG="C:/Users/dhira/.kube/config"
+                export KUBECONFIG="C:/Users/dhira/.kube/eks-config"
                 kubectl cluster-info
                 '''
             }
@@ -69,17 +75,17 @@ pipeline {
             steps {
                 script {
                     def filesToApply = [
-                        "K8S_DIR/app-deployment.yaml",
-                        "K8S_DIR/app-service.yaml",
-                        "K8S_DIR/configmap.yaml",
-                        "K8S_DIR/ingress.yaml",
-                        "K8S_DIR/mongo-deployment.yaml",
-                        "K8S_DIR/mongo-service.yaml",
-                        "K8S_DIR/mysql-deployment.yaml",
-                        "K8S_DIR/mysql-service.yaml",
-                        "K8S_DIR/redis-deployment.yaml",
-                        "K8S_DIR/redis-service.yaml",
-                        "K8S_DIR/secret.yaml"
+                        "K8S/app-deployment.yaml",
+                        "K8S/app-service.yaml",
+                        "K8S/configmap.yaml",
+                        "K8S/ingress.yaml",
+                        "K8S/mongo-deployment.yaml",
+                        "K8S/mongo-service.yaml",
+                        "K8S/mysql-deployment.yaml",
+                        "K8S/mysql-service.yaml",
+                        "K8S/redis-deployment.yaml",
+                        "K8S/redis-service.yaml",
+                        "K8S/secret.yaml"
                     ]
                     for (def file : filesToApply) {
                         echo "Applying ${file}"
