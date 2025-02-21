@@ -65,17 +65,17 @@ pipeline {
             steps {
                 script {
                     def filesToApply = [
-                        "K8s/app-deployment.yaml",
-                        "K8s/app-service.yaml",
-                        "K8s/configmap.yaml",
-                        "K8s/ingress.yaml",
-                        "K8s/mongo-deployment.yaml",
-                        "K8s/mongo-service.yaml",
-                        "K8s/mysql-deployment.yaml",
-                        "K8s/mysql-service.yaml",
-                        "K8s/redis-deployment.yaml",
-                        "K8s/redis-service.yaml",
-                        "K8s/secret.yaml"
+                        "k8s/app-deployment.yaml",
+                        "k8s/app-service.yaml",
+                        "k8s/configmap.yaml",
+                        "k8s/ingress.yaml",
+                        "k8s/mongo-deployment.yaml",
+                        "k8s/mongo-service.yaml",
+                        "k8s/mysql-deployment.yaml",
+                        "k8s/mysql-service.yaml",
+                        "k8s/redis-deployment.yaml",
+                        "k8s/redis-service.yaml",
+                        "k8s/secret.yaml"
                     ]
                     for (def file : filesToApply) {
                         echo "Applying ${file}"
