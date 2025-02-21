@@ -54,6 +54,13 @@ pipeline {
                 }
             }
         }
+        stage('Debug Workspace') {
+    steps {
+        sh 'pwd'         # Print current directory
+        sh 'ls -R'       # List all files recursively
+    }
+}
+
         stage('Deploy to EKS') {
             steps {
                 script {
