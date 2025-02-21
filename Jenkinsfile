@@ -50,18 +50,10 @@ pipeline {
                 withCredentials([file(credentialsId: 'EKS_CONFIG11', variable: 'KUBECONFIG')]) {
                     sh 'kubectl config get-contexts'
                     sh 'kubectl config current-context'
+                    sh 'kubectl get namespaces'
                 }
             }
         }
-
-        stage('Check Cluster Info') {
-            steps {
-                sh '''
-                kubectl cluster-info
-                '''
-            }
-        }
-
         stage('Deploy to EKS') {
             steps {
                 script {
