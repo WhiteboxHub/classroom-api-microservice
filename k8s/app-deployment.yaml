@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fastapi-app
-          image: your-docker-hub-username/fastapi-microservice:latest
+          image: manisaireddy21/testing:microservice-api
           ports:
             - containerPort: 8000
           envFrom:
@@ -22,3 +22,10 @@ spec:
                 name: app-config
             - secretRef:
                 name: app-secrets
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
