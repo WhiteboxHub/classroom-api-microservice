@@ -10,13 +10,14 @@ pipeline {
         DOCKER_HUB_USERNAME = "${env.DOCKER_HUB_USERNAME}"
         DOCKER_HUB_TAGNAME = "${env.DOCKER_HUB_TAGNAME}"
     }
-    // chekout
+    
     stages {
         stage('Checkout Code') {
             steps {
                 git branch: "${microservices_branch_name}", url: "${microservices_api_repo}"
             }
         }
+        
         stage('Docker build') {
             steps {
                 sh '''
@@ -26,6 +27,7 @@ pipeline {
                 '''
             }
         }
+        
         stage('Check AWS Credentials') {
             steps {
                 script {
@@ -35,6 +37,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Push to DockerHub/ECR') {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD', variable: 'DOCKER_HUB_PASS')]) {
@@ -45,42 +48,45 @@ pipeline {
                 }
             }
         }
-         stage('Check Kubernetes Context') {
+        
+        stage('Check Kubernetes Context and deploy') {
             steps {
                 withCredentials([file(credentialsId: 'EKS_CONFIG11', variable: 'KUBECONFIG')]) {
                     sh 'kubectl cluster-info'
                     sh 'kubectl config get-contexts'
                     sh 'kubectl config current-context'
                     sh 'kubectl get namespaces'
-                    sh 'kubectl apply -f  k8s/app-deployment.yaml'
                 }
             }
         }
 
         stage('Deploy to EKS') {
             steps {
-                script {
-                    def filesToApply = [
-                        "k8s/app-deployment.yaml",
-                        "k8s/app-service.yaml",
-                        "k8s/configmap.yaml",
-                        "k8s/ingress.yaml",
-                        "k8s/mongo-deployment.yaml",
-                        "k8s/mongo-service.yaml",
-                        "k8s/mysql-deployment.yaml",
-                        "k8s/mysql-service.yaml",
-                        "k8s/redis-deployment.yaml",
-                        "k8s/redis-service.yaml",
-                        "k8s/secret.yaml"
-                    ]
-                    for (def file : filesToApply) {
-                        echo "Applying ${file}"
-                        sh "kubectl apply -f ${file}"
+                withCredentials([file(credentialsId: 'EKS_CONFIG11', variable: 'KUBECONFIG')]) {
+                    script {
+                        def filesToApply = [
+                            "k8s/app-deployment.yaml",
+                            "k8s/app-service.yaml",
+                            "k8s/configmap.yaml",
+                            "k8s/ingress.yaml",
+                            "k8s/mongo-deployment.yaml",
+                            "k8s/mongo-service.yaml",
+                            "k8s/mysql-deployment.yaml",
+                            "k8s/mysql-service.yaml",
+                            "k8s/redis-deployment.yaml",
+                            "k8s/redis-service.yaml",
+                            "k8s/secret.yaml"
+                        ]
+                        for (def file : filesToApply) {
+                            echo "Applying ${file}"
+                            sh "kubectl apply -f ${file}"
+                        }
                     }
                 }
             }
         }
     }
+    
     post {
         success {
             echo 'Deployment success'
