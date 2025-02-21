@@ -57,7 +57,7 @@ pipeline {
         stage('Debug Workspace') {
     steps {
         sh 'pwd'       
-        sh 'ls -R
+        sh 'ls -R'
     }
 }
 
