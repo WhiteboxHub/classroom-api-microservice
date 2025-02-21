@@ -79,7 +79,7 @@ pipeline {
                     ]
                     for (def file : filesToApply) {
                         echo "Applying ${file}"
-                        sh "kubectl apply -f ${file} --namespace=kube-public"
+                        sh "kubectl apply -f ${file}"
                     }
                 }
             }
