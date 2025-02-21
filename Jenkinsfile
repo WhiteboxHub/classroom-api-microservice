@@ -65,21 +65,21 @@ pipeline {
             steps {
                 script {
                     def filesToApply = [
-                        "K8S/app-deployment.yaml",
-                        "K8S/app-service.yaml",
-                        "K8S/configmap.yaml",
-                        "K8S/ingress.yaml",
-                        "K8S/mongo-deployment.yaml",
-                        "K8S/mongo-service.yaml",
-                        "K8S/mysql-deployment.yaml",
-                        "K8S/mysql-service.yaml",
-                        "K8S/redis-deployment.yaml",
-                        "K8S/redis-service.yaml",
-                        "K8S/secret.yaml"
+                        "K8s/app-deployment.yaml",
+                        "K8s/app-service.yaml",
+                        "K8s/configmap.yaml",
+                        "K8s/ingress.yaml",
+                        "K8s/mongo-deployment.yaml",
+                        "K8s/mongo-service.yaml",
+                        "K8s/mysql-deployment.yaml",
+                        "K8s/mysql-service.yaml",
+                        "K8s/redis-deployment.yaml",
+                        "K8s/redis-service.yaml",
+                        "K8s/secret.yaml"
                     ]
                     for (def file : filesToApply) {
                         echo "Applying ${file}"
-                        sh "kubectl apply -f ${file} --namespace=${env.NAMESPACE}"
+                        sh "kubectl apply -f ${file} --namespace=kube-public"
                     }
                 }
             }
