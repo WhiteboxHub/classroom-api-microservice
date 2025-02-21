@@ -48,18 +48,14 @@ pipeline {
          stage('Check Kubernetes Context') {
             steps {
                 withCredentials([file(credentialsId: 'EKS_CONFIG11', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl cluster-info'
                     sh 'kubectl config get-contexts'
                     sh 'kubectl config current-context'
                     sh 'kubectl get namespaces'
+                    sh 'kubectl apply -f  k8s/app-deployment.yaml'
                 }
             }
         }
-        stage('Debug Workspace') {
-    steps {
-        sh 'pwd'       
-        sh 'ls -R'
-    }
-}
 
         stage('Deploy to EKS') {
             steps {
