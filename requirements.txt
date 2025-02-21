@@ -5,3 +5,5 @@ pydantic
 motor
 redis
 pyjwt
+pymysql
+
