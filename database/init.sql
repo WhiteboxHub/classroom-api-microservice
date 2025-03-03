@@ -19,3 +19,13 @@ INSERT INTO students (name, age, grade) VALUES
     ('Henry Miller', 15, '9th Grade'),
     ('Ivy Carter', 12, '6th Grade'),
     ('Jack Turner', 14, '8th Grade');
+
+CREATE TABLE auth (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(320) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(512) NOT NULL,
+    phone_number VARCHAR(20),
+    role VARCHAR(50)
+);
+
