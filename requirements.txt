@@ -5,3 +5,8 @@ pydantic
 motor
 redis
 pyjwt
+pymysql
+bcrypt
+pydantic[email]
+email-validator
+python-jose
